@@ -215,11 +215,11 @@ function SquareMovementControls(cam, element, scale) {
     };
     
     this.turnLeft = function() {
-        
+        cam.rotation.y -= Math.PI / 2;
     };
 
     this.turnRight = function() {
-        
+        cam.rotation.y += Math.PI / 2;        
     };
     
 }
