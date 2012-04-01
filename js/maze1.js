@@ -3,24 +3,26 @@
     var i,j,
         WIDTH = 640,
         HEIGHT = 480,
-        VIEW_ANGLE = 90,
+        VIEW_ANGLE = 95,
         ASPECT = WIDTH/HEIGHT,
         NEAR = 0.1,
         FAR = 10000,
         CUBE_SCALE = 72,
+        LIGHT_RANGE = 10 * CUBE_SCALE,
         container = $('#container'),
         renderer = new THREE.WebGLRenderer({antialias: true}),
         //renderer = new THREE.CanvasRenderer(),
         camera = new THREE.PerspectiveCamera(
             VIEW_ANGLE, ASPECT, NEAR, FAR),
         scene = new THREE.Scene(),
-        pointLight = new THREE.PointLight(0xFFFFFF),
+        pointLight = new THREE.PointLight(0xFFFFFF, 1, LIGHT_RANGE),
         material = new THREE.MeshLambertMaterial({color: 0xbbbbbb});
         
     var controls;
         
         
     var textMap = [
+        // dots are ignored, there to make map look square in dejavu sans mono
         /* 15 */ "#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#",
         /* 14 */ "#. . . . . .#. . . . . . . . .#",
         /* 13 */ "#. . . . . .#. . . .#. . . . .#",
@@ -147,12 +149,16 @@
     //camera.position.z = 300;
     scene.add(camera);
     
-    pointLight.position.x = 10;
-    pointLight.position.y = 50;
-    pointLight.position.z = 130;
-    scene.add(pointLight);
+    //pointLight.position.x = 10;
+    //pointLight.position.y = 50;
+    //pointLight.position.z = 130;
+    //scene.add(pointLight);
+    //pointLight.position.x = camera.position.x;
+    //pointLight.position.y = camera.position.y;
+    //pointLight.position.z = camera.position.z;
+    pointLight.position = new THREE.Vector3(0,0,0);
+    camera.add(pointLight);
     
-    //scene.add(sphere);
 
     renderer.setSize(WIDTH, HEIGHT);
 
@@ -166,7 +172,7 @@
         //controls.update(0.2);
     }
     
-    
+    // thx to http://nooshu.com/debug-axes-in-three-js
     var debugaxis = function(axisLength){
         //Shorten the vertex function
         function v(x,y,z){ 
@@ -189,7 +195,6 @@
         createAxis(v(0, 0, 0), v(0, axisLength, 0), 0x00FF00);
         createAxis(v(0, 0, 0), v(0, 0, axisLength), 0x0000FF);
     };
-
     //To use enter the axis length
     debugaxis(100);
         
@@ -201,8 +206,10 @@
         //controls.movementSpeed = 72;
         //controls.lookSpeed = 0.01;
         //controls.noFly = true;
-        //controls.lookVertical = true;        
+        //controls.lookVertical = true;
+        //camera.updateMatrixWorld();
         render();
+        
     });
     
 }());
