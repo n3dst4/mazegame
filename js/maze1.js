@@ -1,16 +1,18 @@
 (function(){
     "use strict";
     var i,j,
-        WIDTH = 640,
+        WIDTH = 624,
         HEIGHT = 480,
-        VIEW_ANGLE = 95,
-        ASPECT = WIDTH/HEIGHT,
+        VIEW_ANGLE = 55,
+        ASPECT = WIDTH/(HEIGHT),
         NEAR = 0.1,
-        FAR = 10000,
+        FAR = 1000,
         CUBE_SCALE = 144,
-        EYE_LEVEL = 70,
-        LIGHT_RANGE = 10 * CUBE_SCALE,
+        EYE_LEVEL = 72,
+        FOCUS_LEVEL = 40, // height that the camera looks at
+        LIGHT_RANGE = 7 * CUBE_SCALE,
         TURN_SPEED = 200,
+        HEAD_TILT_DOWN = 0,//-Math.PI*(20/360),
         container = $('#container'),
         renderer = new THREE.WebGLRenderer({antialias: true}),
         //renderer = new THREE.CanvasRenderer(),
@@ -18,27 +20,28 @@
             VIEW_ANGLE, ASPECT, NEAR, FAR),
         scene = new THREE.Scene(),
         pointLight = new THREE.PointLight(0xFFFFFF, 1, LIGHT_RANGE),
-        material = new THREE.MeshLambertMaterial({color: 0xdddddd, wireframe: false});
+        material = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false}),
+        player = new THREE.Object3D();
         
     var controls;
         
     var textMap = [
         // dots are ignored, there to make map look square in dejavu sans mono
         /* 15 */ "#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#",
-        /* 14 */ "#. . . . . .#. . . . . . . . .#",
-        /* 13 */ "#. . . . . .#. . . .#. . . . .#",
-        /* 12 */ "#. . . . . . . . . .#.#.#.#.#.#",
-        /* 11 */ "#.#.#. .#.#.#.#. . . . . . . .#",
-        /* 10 */ "#. . . . . . .#. . . . .#. . .#",
-        /* 09 */ "#. . .O. . . .#. . . . .#. . .#",
-        /* 08 */ "#.#.#.#.#.#.#.#. . . .#.#. . .#",
-        /* 07 */ "#. . . . . . . . .#. . .#. . .#",
+        /* 14 */ "#. . . . . . . . . . . . . . .#",
+        /* 13 */ "#. . . . . . . . . . . .#. . .#",
+        /* 12 */ "#. . . . . .#.#.#. .#.#.#.#.#.#",
+        /* 11 */ "#.#.#. .#.#.#. . . . . . . . .#",
+        /* 10 */ "#. . . . . .#. . . . . . . . .#",
+        /* 09 */ "#. . .O. . .#. . . . . . . . .#",
+        /* 08 */ "#.#.#.#.#.#.#.#. .#.#.#.#.#.#.#",
+        /* 07 */ "#. . . . . . . . . . . .#. . .#",
         /* 06 */ "#. .#.#.#.#. .#. .#.#. .#. . .#",
-        /* 05 */ "#. .#. . . . .#. . .#. .#. . .#",
+        /* 05 */ "#. .#. . . . .#. . .#.A. . . .#",
         /* 04 */ "#. .#.#.#.#.#.#.#.#.#. .#. . .#",
         /* 03 */ "#. . . . . . . . . . . .#. . .#",
         /* 02 */ "#. .#.#.#.#. .#.#.#.#. .#.#.#.#",
-        /* 01 */ "#.A.#. . . . . . .#. . . . . .#",
+        /* 01 */ "#. .#. . . . . . .#. . . . . .#",
         /* 00 */ "#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#",
         /*        0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1*/
         /*                            0 1 2 3 4 5*/
@@ -130,19 +133,32 @@
     
     mapToScene(map, scene, CUBE_SCALE);
     
-    camera.position.x = map.startCell.position.x*CUBE_SCALE + (CUBE_SCALE/2);
-    camera.position.y = map.startCell.position.y*CUBE_SCALE + (CUBE_SCALE/2);
-    camera.position.z = EYE_LEVEL;
-    camera.up = new THREE.Vector3( 0, 0, 1 );
-    camera.lookAt({
-        x: camera.position.x,
-        y: camera.position.y + CUBE_SCALE,
-        z: camera.position.z
+    player.position.x = map.startCell.position.x*CUBE_SCALE + (CUBE_SCALE/2);
+    player.position.y = map.startCell.position.y*CUBE_SCALE + (CUBE_SCALE/2);
+    player.position.z = EYE_LEVEL;
+    player.up = new THREE.Vector3( 0, 0, 1 );
+    player.lookAt({
+        x: player.position.x,
+        y: player.position.y - CUBE_SCALE,
+        z: EYE_LEVEL
     });
-    scene.add(camera);
+    
+    camera.position = new THREE.Vector3(0,0,CUBE_SCALE/2);
+    //camera.position = new THREE.Vector3(0,0,0);
+    camera.rotation = new THREE.Vector3(HEAD_TILT_DOWN,0,0);
+    
+    player.add(camera);
+    
+    //camera.setLens(20, 72);
+    scene.add(player);
+    
+    var sphere = new THREE.Mesh(
+            new THREE.SphereGeometry(1, 16, 16), material);
+    sphere.translateY(-CUBE_SCALE/2);
+    player.add(sphere);
     
     pointLight.position = new THREE.Vector3(0,0,0);
-    camera.add(pointLight);
+    player.add(pointLight);
     
     renderer.setSize(WIDTH, HEIGHT);
 
@@ -184,7 +200,7 @@
     
     $(function(){
         container.append(renderer.domElement);
-        new SquareMovementControls(camera, renderer.domElement, CUBE_SCALE, TURN_SPEED);
+        new SquareMovementControls(player, renderer.domElement, CUBE_SCALE, TURN_SPEED);
         render();
         
     });
