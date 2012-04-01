@@ -147,7 +147,7 @@
     renderer.setSize(WIDTH, HEIGHT);
 
 
-
+    //TWEEN.start();
     
     function render() {
         requestAnimationFrame(render);
@@ -200,16 +200,16 @@ function SquareMovementControls(cam, element, scale, turnSpeed) {
         lock = true;
 		switch( event.keyCode ) {
 			case 38: /*up*/
-			case 87: /*W*/ self.moveForward(); break;
+			case 87: /*W*/ moveForward(); break;
 			case 37: /*left*/
-			case 65: /*A*/ self.moveLeft(); break;
+			case 65: /*A*/ moveLeft(); break;
 			case 40: /*down*/
-			case 83: /*S*/ self.moveBackward(); break;
+			case 83: /*S*/ moveBackward(); break;
 			case 39: /*right*/
-			case 68: /*D*/ self.moveRight(); break;
+			case 68: /*D*/ moveRight(); break;
             // turning
-			case 69: /*E*/ self.turnRight(); break;
-			case 81: /*Q*/ self.turnLeft(); break;
+			case 69: /*E*/ turnRight(); break;
+			case 81: /*Q*/ turnLeft(); break;
             default: lock = false;
 		}
         console.log ("cam x " + cam.position.x +
@@ -218,70 +218,34 @@ function SquareMovementControls(cam, element, scale, turnSpeed) {
         
 	});
     
-    function unlock() { lock = false; }
+    function unlock () { lock = false; }
     
-    this.moveForward = function() {
-        var axis = new THREE.Vector3( 0, 0, -1 );//cam._vector.set( 1, 0, 0 );
-        cam.matrix.rotateAxis(axis);
-        var target = cam.position.clone().
-            addSelf(axis.multiplyScalar(scale));
-        target = {x: target.x, y: target.y, z: target.z}
-        new TWEEN.Tween(cam.position).
-            to(target, turnSpeed).
-            onComplete(unlock).
-            start();
-    };
-    
-    this.moveBackward = function() {
-        var axis = new THREE.Vector3( 0, 0, 1 );//cam._vector.set( 1, 0, 0 );
-        cam.matrix.rotateAxis(axis);
-        var target = cam.position.clone().
-            addSelf(axis.multiplyScalar(scale));
-        target = {x: target.x, y: target.y, z: target.z}
-        new TWEEN.Tween(cam.position).
-            to(target, turnSpeed).
-            onComplete(unlock).
-            start();
-    };
-    
-    this.moveLeft = function() {
-        var axis = new THREE.Vector3( -1, 0, 0 );//cam._vector.set( 1, 0, 0 );
-        cam.matrix.rotateAxis(axis);
-        var target = cam.position.clone().
-            addSelf(axis.multiplyScalar(scale));
-        target = {x: target.x, y: target.y, z: target.z}
-        new TWEEN.Tween(cam.position).
-            to(target, turnSpeed).
-            onComplete(unlock).
-            start();
-    };
-    
-    this.moveRight = function() {
-        var axis = new THREE.Vector3( 1, 0, 0 );//cam._vector.set( 1, 0, 0 );
-        cam.matrix.rotateAxis(axis);
-        var target = cam.position.clone().
-            addSelf(axis.multiplyScalar(scale));
-        target = {x: target.x, y: target.y, z: target.z}
-        new TWEEN.Tween(cam.position).
-            to(target, turnSpeed).
-            onComplete(unlock).
-            start();
-        //cam.translateX(scale);        
-    };
-    
-    this.turnLeft = function() {
-        new TWEEN.Tween(cam.rotation).
-            to({y: cam.rotation.y + Math.PI / 2}, turnSpeed).
-            onComplete(unlock).
-            start();
-    };
+    function tween (a, b) {
+        new TWEEN.Tween(a).to(b, turnSpeed).onComplete(unlock).start();
+    }
 
-    this.turnRight = function() {
-        new TWEEN.Tween(cam.rotation).
-            to({y: cam.rotation.y - Math.PI / 2}, turnSpeed).
-            onComplete(unlock).
-            start();
-    };
+    function move (x, y, z) {
+        var axis = new THREE.Vector3(x, y, z);
+        cam.matrix.rotateAxis(axis);
+        var target = cam.position.clone().
+            addSelf(axis.multiplyScalar(scale));
+        target = {x: target.x, y: target.y, z: target.z}
+        tween(cam.position, target);
+    }
+
+    function turn (delta) { tween(cam.rotation, {y: cam.rotation.y + delta}); }
+
+    function moveForward () { move( 0, 0, -1 ); };
+    
+    function moveBackward () { move( 0, 0, 1 ); };
+    
+    function moveLeft () { move( -1, 0, 0 ); };
+    
+    function moveRight () { move( 1, 0, 0 ); };
+    
+    function turnLeft () { turn(Math.PI / 2); };
+
+    function turnRight () { turn(-Math.PI / 2); };
     
 }
 
