@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+    <head>
+        <script src="js/lib/modernizr.custom.13328.js"></script>
+        <script>
+            Modernizr.load([{
+                load: [
+                       "js/lib/Three.js",
+                       "js/lib/jquery-1.7.2.js",
+                       "js/lib/Tween.js",
+                       "js/ballbounce.js"
+                ],
+                callback: function(url, result, key) {
+                    console.log(THREE);
+                }
+            }]);
+        </script>
+    </head>
+    <body>
+        <div id="container"></div>
+    </body>
+</html>
+      
