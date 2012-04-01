@@ -7,8 +7,10 @@
         ASPECT = WIDTH/HEIGHT,
         NEAR = 0.1,
         FAR = 10000,
-        CUBE_SCALE = 72,
+        CUBE_SCALE = 144,
+        EYE_LEVEL = 70,
         LIGHT_RANGE = 10 * CUBE_SCALE,
+        TURN_SPEED = 200,
         container = $('#container'),
         renderer = new THREE.WebGLRenderer({antialias: true}),
         //renderer = new THREE.CanvasRenderer(),
@@ -16,10 +18,9 @@
             VIEW_ANGLE, ASPECT, NEAR, FAR),
         scene = new THREE.Scene(),
         pointLight = new THREE.PointLight(0xFFFFFF, 1, LIGHT_RANGE),
-        material = new THREE.MeshLambertMaterial({color: 0xbbbbbb});
+        material = new THREE.MeshLambertMaterial({color: 0xdddddd, wireframe: false});
         
     var controls;
-        
         
     var textMap = [
         // dots are ignored, there to make map look square in dejavu sans mono
@@ -103,7 +104,6 @@
     map.loadRows(_.map(textMap, function(row, rowIndex){
         row = _.filter(row.split(''), function(cell){ return cell !== "."; });
         return _.map(row, function(cell, cellIndex) {
-            //if (cell===".") return null;
             var type = (cell == " ")? EmptyCell :
                     (cell == "A")? StartCell :
                     (cell == "O")? ExitCell :
@@ -120,8 +120,8 @@
                 cube = new THREE.Mesh(
                     new THREE.CubeGeometry( scale, scale, scale, 1, 1, 1),
                     material);
-                cube.position.x = (x * scale) - (scale/2);
-                cube.position.y = (y * scale) - (scale/2);
+                cube.position.x = (x * scale) + (scale/2);
+                cube.position.y = (y * scale) + (scale/2);
                 cube.position.z = (scale/2);
                 scene.add(cube);
             }
@@ -132,34 +132,18 @@
     
     camera.position.x = map.startCell.position.x*CUBE_SCALE + (CUBE_SCALE/2);
     camera.position.y = map.startCell.position.y*CUBE_SCALE + (CUBE_SCALE/2);
-    camera.position.z = (CUBE_SCALE/2);
-    
-    //camera.rotation = new THREE.Vector3(1, 1, 1);
+    camera.position.z = EYE_LEVEL;
     camera.up = new THREE.Vector3( 0, 0, 1 );
-    
-    
     camera.lookAt({
         x: camera.position.x,
         y: camera.position.y + CUBE_SCALE,
         z: camera.position.z
     });
-    
-        
-        
-    //camera.position.z = 300;
     scene.add(camera);
     
-    //pointLight.position.x = 10;
-    //pointLight.position.y = 50;
-    //pointLight.position.z = 130;
-    //scene.add(pointLight);
-    //pointLight.position.x = camera.position.x;
-    //pointLight.position.y = camera.position.y;
-    //pointLight.position.z = camera.position.z;
     pointLight.position = new THREE.Vector3(0,0,0);
     camera.add(pointLight);
     
-
     renderer.setSize(WIDTH, HEIGHT);
 
 
@@ -167,9 +151,8 @@
     
     function render() {
         requestAnimationFrame(render);
-        //camera.position.x++;
         renderer.render(scene, camera);
-        //controls.update(0.2);
+        TWEEN.update();
     }
     
     // thx to http://nooshu.com/debug-axes-in-three-js
@@ -201,13 +184,7 @@
     
     $(function(){
         container.append(renderer.domElement);
-        //controls = new THREE.FirstPersonControls(camera, renderer.domElement);
-        new SquareMovementControls(camera, renderer.domElement, CUBE_SCALE);
-        //controls.movementSpeed = 72;
-        //controls.lookSpeed = 0.01;
-        //controls.noFly = true;
-        //controls.lookVertical = true;
-        //camera.updateMatrixWorld();
+        new SquareMovementControls(camera, renderer.domElement, CUBE_SCALE, TURN_SPEED);
         render();
         
     });
@@ -215,9 +192,12 @@
 }());
 
 
-function SquareMovementControls(cam, element, scale) {
-    var self = this;
+function SquareMovementControls(cam, element, scale, turnSpeed) {
+    var self = this,
+        lock = false;
     $(document).keydown(function ( event ) {
+        if (lock) return;
+        lock = true;
 		switch( event.keyCode ) {
 			case 38: /*up*/
 			case 87: /*W*/ self.moveForward(); break;
@@ -230,6 +210,7 @@ function SquareMovementControls(cam, element, scale) {
             // turning
 			case 69: /*E*/ self.turnRight(); break;
 			case 81: /*Q*/ self.turnLeft(); break;
+            default: lock = false;
 		}
         console.log ("cam x " + cam.position.x +
                      " y " + cam.position.y +
@@ -237,28 +218,69 @@ function SquareMovementControls(cam, element, scale) {
         
 	});
     
+    function unlock() { lock = false; }
+    
     this.moveForward = function() {
-        cam.translateZ(-scale);
+        var axis = new THREE.Vector3( 0, 0, -1 );//cam._vector.set( 1, 0, 0 );
+        cam.matrix.rotateAxis(axis);
+        var target = cam.position.clone().
+            addSelf(axis.multiplyScalar(scale));
+        target = {x: target.x, y: target.y, z: target.z}
+        new TWEEN.Tween(cam.position).
+            to(target, turnSpeed).
+            onComplete(unlock).
+            start();
     };
     
     this.moveBackward = function() {
-        cam.translateZ(scale);        
+        var axis = new THREE.Vector3( 0, 0, 1 );//cam._vector.set( 1, 0, 0 );
+        cam.matrix.rotateAxis(axis);
+        var target = cam.position.clone().
+            addSelf(axis.multiplyScalar(scale));
+        target = {x: target.x, y: target.y, z: target.z}
+        new TWEEN.Tween(cam.position).
+            to(target, turnSpeed).
+            onComplete(unlock).
+            start();
     };
     
     this.moveLeft = function() {
-        cam.translateX(-scale);        
+        var axis = new THREE.Vector3( -1, 0, 0 );//cam._vector.set( 1, 0, 0 );
+        cam.matrix.rotateAxis(axis);
+        var target = cam.position.clone().
+            addSelf(axis.multiplyScalar(scale));
+        target = {x: target.x, y: target.y, z: target.z}
+        new TWEEN.Tween(cam.position).
+            to(target, turnSpeed).
+            onComplete(unlock).
+            start();
     };
     
     this.moveRight = function() {
-        cam.translateX(scale);        
+        var axis = new THREE.Vector3( 1, 0, 0 );//cam._vector.set( 1, 0, 0 );
+        cam.matrix.rotateAxis(axis);
+        var target = cam.position.clone().
+            addSelf(axis.multiplyScalar(scale));
+        target = {x: target.x, y: target.y, z: target.z}
+        new TWEEN.Tween(cam.position).
+            to(target, turnSpeed).
+            onComplete(unlock).
+            start();
+        //cam.translateX(scale);        
     };
     
     this.turnLeft = function() {
-        cam.rotation.y += Math.PI / 2;
+        new TWEEN.Tween(cam.rotation).
+            to({y: cam.rotation.y + Math.PI / 2}, turnSpeed).
+            onComplete(unlock).
+            start();
     };
 
     this.turnRight = function() {
-        cam.rotation.y -= Math.PI / 2;        
+        new TWEEN.Tween(cam.rotation).
+            to({y: cam.rotation.y - Math.PI / 2}, turnSpeed).
+            onComplete(unlock).
+            start();
     };
     
 }
