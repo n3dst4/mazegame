@@ -1,5 +1,5 @@
 (function(){
-    
+    "use strict";
     var i,j,
         WIDTH = 640,
         HEIGHT = 480,
@@ -7,7 +7,7 @@
         ASPECT = WIDTH/HEIGHT,
         NEAR = 0.1,
         FAR = 10000,
-        CUBE_SCALE = 72;
+        CUBE_SCALE = 72,
         container = $('#container'),
         renderer = new THREE.WebGLRenderer({antialias: true}),
         //renderer = new THREE.CanvasRenderer(),
@@ -21,23 +21,26 @@
         
         
     var textMap = [
-        "################",
-        "#     #        #",
-        "#     #   #    #",
-        "#         ######",
-        "### ####       #",
-        "#      #    #  #",
-        "#  O   #    #  #",
-        "########   ##  #",
-        "#        #  #  #",
-        "# #### # ## #  #",
-        "# #    #  # #  #",
-        "# ######### #  #",
-        "#           #  #",
-        "# #### #### ####",
-        "#A#      #     #",
-        "################",
+        /* 15 */ "#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#",
+        /* 14 */ "#. . . . . .#. . . . . . . . .#",
+        /* 13 */ "#. . . . . .#. . . .#. . . . .#",
+        /* 12 */ "#. . . . . . . . . .#.#.#.#.#.#",
+        /* 11 */ "#.#.#. .#.#.#.#. . . . . . . .#",
+        /* 10 */ "#. . . . . . .#. . . . .#. . .#",
+        /* 09 */ "#. . .O. . . .#. . . . .#. . .#",
+        /* 08 */ "#.#.#.#.#.#.#.#. . . .#.#. . .#",
+        /* 07 */ "#. . . . . . . . .#. . .#. . .#",
+        /* 06 */ "#. .#.#.#.#. .#. .#.#. .#. . .#",
+        /* 05 */ "#. .#. . . . .#. . .#. .#. . .#",
+        /* 04 */ "#. .#.#.#.#.#.#.#.#.#. .#. . .#",
+        /* 03 */ "#. . . . . . . . . . . .#. . .#",
+        /* 02 */ "#. .#.#.#.#. .#.#.#.#. .#.#.#.#",
+        /* 01 */ "#.A.#. . . . . . .#. . . . . .#",
+        /* 00 */ "#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#",
+        /*        0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1*/
+        /*                            0 1 2 3 4 5*/
     ];
+    textMap.reverse();
     
     var map = {
         rows: [],
@@ -96,7 +99,9 @@
     
     // turn textmap into an array of Cell objects
     map.loadRows(_.map(textMap, function(row, rowIndex){
-        return _.map(row.split(""), function(cell, cellIndex) {
+        row = _.filter(row.split(''), function(cell){ return cell !== "."; });
+        return _.map(row, function(cell, cellIndex) {
+            //if (cell===".") return null;
             var type = (cell == " ")? EmptyCell :
                     (cell == "A")? StartCell :
                     (cell == "O")? ExitCell :
@@ -133,7 +138,7 @@
     
     camera.lookAt({
         x: camera.position.x,
-        y: camera.position.y - CUBE_SCALE,
+        y: camera.position.y + CUBE_SCALE,
         z: camera.position.z
     });
     
@@ -161,6 +166,33 @@
         //controls.update(0.2);
     }
     
+    
+    var debugaxis = function(axisLength){
+        //Shorten the vertex function
+        function v(x,y,z){ 
+                return new THREE.Vertex(new THREE.Vector3(x,y,z)); 
+        }
+        
+        //Create axis (point1, point2, colour)
+        function createAxis(p1, p2, color){
+                var line, lineGeometry = new THREE.Geometry(),
+                lineMat = new THREE.LineBasicMaterial({color: color, lineWidth: 10});
+                lineGeometry.vertices.push(p1, p2);
+                line = new THREE.Line(lineGeometry, lineMat);
+                scene.add(line);
+        }
+        
+        //createAxis(v(-axisLength, 0, 0), v(axisLength, 0, 0), 0xFF0000);
+        //createAxis(v(0, -axisLength, 0), v(0, axisLength, 0), 0x00FF00);
+        //createAxis(v(0, 0, -axisLength), v(0, 0, axisLength), 0x0000FF);
+        createAxis(v(0, 0, 0), v(axisLength, 0, 0), 0xFF0000);
+        createAxis(v(0, 0, 0), v(0, axisLength, 0), 0x00FF00);
+        createAxis(v(0, 0, 0), v(0, 0, axisLength), 0x0000FF);
+    };
+
+    //To use enter the axis length
+    debugaxis(100);
+        
     
     $(function(){
         container.append(renderer.domElement);
@@ -215,11 +247,11 @@ function SquareMovementControls(cam, element, scale) {
     };
     
     this.turnLeft = function() {
-        cam.rotation.y -= Math.PI / 2;
+        cam.rotation.y += Math.PI / 2;
     };
 
     this.turnRight = function() {
-        cam.rotation.y += Math.PI / 2;        
+        cam.rotation.y -= Math.PI / 2;        
     };
     
 }
