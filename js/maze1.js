@@ -5,11 +5,10 @@
         HEIGHT = 480,
         VIEW_ANGLE = 55,
         ASPECT = WIDTH/(HEIGHT),
-        NEAR = 0.1,
-        FAR = 1000,
         CUBE_SCALE = 144,
-        EYE_LEVEL = 72,
-        FOCUS_LEVEL = 40, // height that the camera looks at
+        NEAR = 0.1,
+        FAR = CUBE_SCALE * 100,
+        EYE_LEVEL = CUBE_SCALE/2,
         LIGHT_RANGE = 7 * CUBE_SCALE,
         TURN_SPEED = 200,
         HEAD_TILT_DOWN = 0,//-Math.PI*(20/360),
@@ -20,7 +19,12 @@
             VIEW_ANGLE, ASPECT, NEAR, FAR),
         scene = new THREE.Scene(),
         pointLight = new THREE.PointLight(0xFFFFFF, 1, LIGHT_RANGE),
-        material = new THREE.MeshLambertMaterial({color: 0xffffff, wireframe: false}),
+        material = new THREE.MeshLambertMaterial({
+			color: 0xffffff,
+			map: THREE.ImageUtils.loadTexture('proto_blue.png', {}, function() {})
+		}),
+        //material = new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: false}),
+        //material = new THREE.MeshBasicMaterial({color: 0xcccccc}),
         player = new THREE.Object3D();
         
     var controls;
@@ -37,11 +41,11 @@
         /* 08 */ "#.#.#.#.#.#.#.#. .#.#.#.#.#.#.#",
         /* 07 */ "#. . . . . . . . . . . .#. . .#",
         /* 06 */ "#. .#.#.#.#. .#. .#.#. .#. . .#",
-        /* 05 */ "#. .#. . . . .#. . .#.A. . . .#",
+        /* 05 */ "#. .#. . . . .#. . .#. . . . .#",
         /* 04 */ "#. .#.#.#.#.#.#.#.#.#. .#. . .#",
         /* 03 */ "#. . . . . . . . . . . .#. . .#",
         /* 02 */ "#. .#.#.#.#. .#.#.#.#. .#.#.#.#",
-        /* 01 */ "#. .#. . . . . . .#. . . . . .#",
+        /* 01 */ "#.A.#. . . . . . .#. . . . . .#",
         /* 00 */ "#.#.#.#.#.#.#.#.#.#.#.#.#.#.#.#",
         /*        0 1 2 3 4 5 6 7 8 9 1 1 1 1 1 1*/
         /*                            0 1 2 3 4 5*/
@@ -121,7 +125,7 @@
             for (x=0; x < map.rows[y].length; x++) {
                 if (!map.rows[y][x].isBlocked) continue;
                 cube = new THREE.Mesh(
-                    new THREE.CubeGeometry( scale, scale, scale, 1, 1, 1),
+                    new THREE.CubeGeometry( scale, scale, scale, 2, 2, 2),
                     material);
                 cube.position.x = (x * scale) + (scale/2);
                 cube.position.y = (y * scale) + (scale/2);
