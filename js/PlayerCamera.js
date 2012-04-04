@@ -16,11 +16,6 @@
             pointLight = new THREE.PointLight(0xFFFFFF, 1, lightRange);
         
         this.dolly = new THREE.Object3D();
-
-        this.camera = new THREE.PerspectiveCamera(angle, aspect, near, far);
-        this.camera.position = new THREE.Vector3(0,0,0);
-        this.camera.rotation = new THREE.Vector3(headTilt,0,0);
-
         this.dolly.position.z = eyeLevel;
         this.dolly.up = new THREE.Vector3( 0, 0, 1 );
         this.dolly.lookAt({
@@ -28,6 +23,12 @@
             y: this.dolly.position.y - scale,
             z: eyeLevel
         });
+
+        this.camera = new THREE.PerspectiveCamera(angle, aspect, near, far);
+        //this.camera.position = new THREE.Vector3(0,0,0);
+        this.camera.position = new THREE.Vector3(0,0,scale/2);
+        this.camera.rotation = new THREE.Vector3(headTilt,0,0);
+
         this.dolly.add(this.camera);
         
         pointLight.position = new THREE.Vector3(0,0,0);
