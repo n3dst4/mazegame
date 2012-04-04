@@ -10,7 +10,7 @@
         FAR = CUBE_SCALE * 100,
         EYE_LEVEL = CUBE_SCALE/2,
         LIGHT_RANGE = 7 * CUBE_SCALE,
-        TURN_SPEED = 200,
+        MOVE_SPEED = 200,
         HEAD_TILT_DOWN = 0,//-Math.PI*(20/360),
         container = $('#container'),
         renderer = new THREE.WebGLRenderer({antialias: true}),
@@ -55,10 +55,6 @@
 
 	var player = new MAZE.Player(map);
 	
-	//function unlock () {
-	//	controls.unlock();
-	//}
-	
 	var controls = new MAZE.Controls(document);
 	controls.bind("moveForward", player.moveForward, player);
 	controls.bind("moveBackward", player.moveBackward, player);
@@ -67,20 +63,18 @@
 	controls.bind("turnLeft", player.turnLeft, player);
 	controls.bind("turnRight", player.turnRight, player);
 
-	
-	
 	var mapScene = new MAZE.MapScene(map, CUBE_SCALE, material);
 	var playerCamera = new MAZE.PlayerCamera({
 		player: player,
 		scale: CUBE_SCALE,
 		map: map,
 		mapScene: mapScene,
-		angle: 55
+		angle: VIEW_ANGLE,
+		moveSpeed: MOVE_SPEED
 	});
     
 	player.bind("moveTo", playerCamera.moveTo, playerCamera);
-	player.bind("turnLeft", playerCamera.turnLeft, playerCamera);
-	player.bind("turnRight", playerCamera.turnRight, playerCamera);
+	player.bind("turnTo", playerCamera.turnTo, playerCamera);
 
 	
 	
@@ -94,7 +88,6 @@
 	// kickoff
     $(function(){
         container.append(renderer.domElement);
-        new MAZE.Controls(player, renderer.domElement, CUBE_SCALE, TURN_SPEED);
         render();
     });
 }());

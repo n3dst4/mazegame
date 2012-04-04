@@ -5,8 +5,6 @@
         var i, self = this;
         MAZE.EventBroker.call(this);
         $(domElement).keydown(function ( event ) {
-            //if (self.locked) return;
-            //self.locked = true;
             switch( event.keyCode ) {
                 case 38: /*up*/
                 case 87: /*W*/ self.trigger("moveForward"); break;
@@ -25,14 +23,7 @@
     }
     
     MAZE.Controls.prototype = {
-        //lock: function () {
-        //    this.locked = true;
-        //},
-        //
-        //unlock: function () {
-        //    this.locked = false;
-        //    console && console.log("unlocking");
-        //},
+
     };
     
     _.extend(MAZE.Controls.prototype, MAZE.EventBroker.prototype);

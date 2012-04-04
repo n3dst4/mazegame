@@ -2,7 +2,7 @@
     var i, MAZE = global.MAZE = global.MAZE || {};
     
     MAZE.PlayerCamera = function (params) {
-        var player = params.player,
+        var player = this.player = params.player,
             scale = this.scale = params.scale,
             moveSpeed = this.moveSpeed = params.moveSpeed || 200,
             mapScene = params.mapScene,
@@ -25,7 +25,6 @@
         });
 
         this.camera = new THREE.PerspectiveCamera(angle, aspect, near, far);
-        //this.camera.position = new THREE.Vector3(0,0,0);
         this.camera.position = new THREE.Vector3(0,0,scale/2);
         this.camera.rotation = new THREE.Vector3(headTilt,0,0);
 
@@ -44,51 +43,41 @@
             this.dolly.position.x = mapScene.map.startCell.position.x*this.scale + (this.scale/2);
             this.dolly.position.y = mapScene.map.startCell.position.y*this.scale + (this.scale/2);
             mapScene.scene.add(this.dolly);
-            //this.moveTo(mapScene.map.startCell.position.x, mapScene.map.startCell.position.y);
         },
         
-        _tween: function (a, b, callback) {
+        _tween: function (a, b) {
+            var self = this;
+            this.player.lock();
             var tween = new TWEEN.Tween(a).to(b, this.moveSpeed).start();
-            if (callback) tween.onComplete(callback);
+            tween.onComplete(function(){ self.player.unlock(); });
         },
-        
-        //_move: function  (x, y, z, callback) {
-        //    var axis = new THREE.Vector3(x, y, z);
-        //    this.dolly.matrix.rotateAxis(axis);
-        //    var target = this.dolly.position.clone().
-        //        addSelf(axis.multiplyScalar(this.scale));
-        //    target = {x: target.x, y: target.y, z: target.z};
-        //    this._tween(this.dolly.position, target, callback);
-        //},
 
-        _turn: function (delta, callback) {
-            this._tween(
-                this.dolly.rotation,
-                {y: this.dolly.rotation.y + delta},
-                callback
-            );
-        },
         
         moveTo: function (x, y) {
-            var target = {x: (x+0.5)*this.scale, y: (y+0.5)*this.scale, z: this.eyeLevel};
+            var target = {
+                x: (x+0.5)*this.scale,
+                y: (y+0.5)*this.scale,
+                z: this.eyeLevel
+            };
             this._tween(this.dolly.position, target);            
         },
-    
-        //moveForward: function (callback) { this._move( 0, 0, -1, callback ); },
-        //
-        //moveBackward: function (callback) { this._move( 0, 0, 1, callback ); },
-        //
-        //moveLeft: function (callback) { this._move( -1, 0, 0, callback ); },
-        //
-        //moveRight: function (callback) { this._move( 1, 0, 0, callback ); },
         
-        turnLeft: function (callback) {
-            this._turn(Math.PI / 2, callback);
+        turnTo: function(facing) {
+            var currentAngle = this.dolly.rotation.y % (2*Math.PI);
+            var targetAngle = (facing.y) === 1 ? 0 :
+                    (facing.x) === 1 ? Math.PI * 1.5 :
+                    (facing.y) === -1 ? Math.PI :
+                    (facing.x) === -1 ? Math.PI * 0.5 : 0;
+            var delta = targetAngle - currentAngle;
+            if (delta > Math.PI) delta -= 2* Math.PI;
+            if (delta < -Math.PI) delta += 2* Math.PI;
+            var target = {
+                y: this.dolly.rotation.y + delta
+            };
+            this._tween(this.dolly.rotation, target);            
         },
     
-        turnRight: function (callback) {
-            this._turn(-Math.PI / 2, callback);
-        },
+
     };
     
     
