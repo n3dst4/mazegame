@@ -48,7 +48,7 @@
             else {
                 console && console.log("failed to move to " + target.x + " " + target.y);
                 console && console.log(targetCell);
-                this.trigger("lurch");
+                this.trigger("lurch", facing);
             }
         },
         

@@ -75,6 +75,7 @@
     
 	player.bind("moveTo", playerCamera.moveTo, playerCamera);
 	player.bind("turnTo", playerCamera.turnTo, playerCamera);
+	player.bind("lurch", playerCamera.lurch, playerCamera);
 
 	
 	

@@ -77,6 +77,17 @@
             this._tween(this.dolly.rotation, target);            
         },
     
+        lurch: function (facing) {
+            var self = this,
+                lurch = facing.clone().multiplyScalar(this.scale * 0.05),
+                target1 = new THREE.Vector2().copy(this.dolly.position).addSelf(lurch),
+                target2 = new THREE.Vector2().copy(this.dolly.position);
+            this.player.lock();                
+            var tween = new TWEEN.Tween(this.dolly.position).to(target1, this.moveSpeed/2).start();
+            var tween2 = new TWEEN.Tween(this.dolly.position).to(target2, this.moveSpeed/2); 
+            tween.chain(tween2);
+            tween2.onComplete(function(){ self.player.unlock(); });
+        }
 
     };
     
