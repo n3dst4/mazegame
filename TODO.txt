@@ -1,0 +1,4 @@
+
+
+Move locking from Controls to Player
+Make movement events from Player absolute, i.e. moveTo, turnTo
