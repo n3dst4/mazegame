@@ -1,3 +1,5 @@
 
 
 Limit movement rate in Player
+
+Player lock should increment/decrement

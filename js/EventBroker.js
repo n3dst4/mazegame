@@ -2,6 +2,40 @@
 
     var undef = "undefined";
     var i, MAZE = global.MAZE = global.MAZE || {};
+    //var console = console || {log:function(){}};
+    
+    var Event = MAZE.Event = function (eventName, args) {
+        this.eventName = eventName;
+        this.args = args;
+        this.onCompleteCallbacks = [];
+        this.callCount = 0;
+        this.callbackCount = 0;
+    };
+    Event.prototype = {
+        makeCallback: function () {
+            var self = this,
+                called = false;
+            this.callCount++;
+            console.log("creating callback for " + this.eventName + ", callCount is now " + this.callCount);
+            return function () {
+                if (called) return;
+                called = true;
+                self.callbackCount++;
+                console.log("fired callback for " + self.eventName + ", callbackCount is now " + self.callbackCount);
+                self.fireWhenReady();
+            }
+        },
+        onComplete: function (callback) {
+            this.onCompleteCallbacks.push(callback);
+            this.fireWhenReady();
+        },
+        fireWhenReady: function () {
+            var i;
+            while (this.callCount === this.callbackCount && this.onCompleteCallbacks.length > 0) {
+                this.onCompleteCallbacks.shift()();
+            }
+        }
+    };
     
     
     var EventBroker = MAZE.EventBroker = function () {
@@ -110,27 +144,36 @@
         /**
          * Fire an event. Any arguments after the first (the event name) will be
          * passed on to callbacks verbatim.
+         * Returns an Event object
          */
         trigger: function (eventName) {
+            return this._trigger(eventName, Array.prototype.slice.call(arguments, 1), false);
+        },
+        
+        
+        
+        triggerSync: function (eventName) {
+            return this._trigger(eventName, Array.prototype.slice.call(arguments, 1), true);
+        },
+        
+        
+        _trigger: function (eventName, args, useSyncCallbacks) {
             var i, 
-                callbacks = this._registry[eventName],
-                args = Array.prototype.slice.call(arguments, 1);
+                callbacks = this._registry[eventName] || [];
+                
+            var event = new Event(eventName, args);
             
             if ( ! this._latches[eventName]) {
                 this._latches[eventName] = true;
                 this._latchArgs[eventName] = args;
             }
             
-            if (typeof(callbacks) === undef) return this;
-            
-            setTimeout(function(){
-                for (i = 0; i < callbacks.length; i++) {
-                    callbacks[i].apply(global, args);
-                }
-            }, 0);
-            return this;
+            for (i = 0; i < callbacks.length; i++) {
+                if (useSyncCallbacks) args.push(event.makeCallback());
+                callbacks[i].apply(global, args);
+            }
+            return event;            
         },
-        
         
         
         /*

@@ -45,24 +45,24 @@
             mapScene.scene.add(this.dolly);
         },
         
-        _tween: function (a, b) {
+        _tween: function (a, b,callback) {
             var self = this;
-            this.player.lock();
+            //this.player.lock();
             var tween = new TWEEN.Tween(a).to(b, this.moveSpeed).start();
-            tween.onComplete(function(){ self.player.unlock(); });
+            if (callback) tween.onComplete(callback);
         },
 
         
-        moveTo: function (x, y) {
+        moveTo: function (x, y, callback) {
             var target = {
                 x: (x+0.5)*this.scale,
                 y: (y+0.5)*this.scale,
                 z: this.eyeLevel
             };
-            this._tween(this.dolly.position, target);            
+            this._tween(this.dolly.position, target, callback); 
         },
         
-        turnTo: function(facing) {
+        turnTo: function(facing, callback) {
             var currentAngle = this.dolly.rotation.y % (2*Math.PI);
             var targetAngle = (facing.y) === 1 ? 0 :
                     (facing.x) === 1 ? Math.PI * 1.5 :
@@ -74,7 +74,7 @@
             var target = {
                 y: this.dolly.rotation.y + delta
             };
-            this._tween(this.dolly.rotation, target);            
+            this._tween(this.dolly.rotation, target, callback);
         },
     
         lurch: function (facing) {

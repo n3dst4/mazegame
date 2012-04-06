@@ -10,7 +10,7 @@
         this.map = map;
         this.position = new THREE.Vector2().copy(map.startCell.position);
         this.facing = new THREE.Vector2(0, 1); // north
-        this.locked = false;
+        this.lockCount = 0;
         this.queue = [];
     }
     
@@ -32,7 +32,8 @@
         },
 
         _moveToward: function(facing) {
-            if (this.locked) {
+            var self = this;
+            if (this.lockCount > 0) {
                 if (this.queue.length < MAX_QUEUE_LEN) {
                     this.queue.push(_.bind(this._moveToward, this, facing));
                 }
@@ -40,20 +41,28 @@
             }
             var target = this.position.clone().addSelf(facing),
                 targetCell = this.map.getCellAt(target.x, target.y);
-            if (targetCell && !targetCell.isBlocked) {
+                
+            var canMove = targetCell.canAccept(this);
+                
+            if (canMove) {
                 this.position = target;
-                console && console.log("position is now " + this.position.x + " " + this.position.y);
-                this.trigger("moveTo", target.x, target.y);
+                this.lock();
+                this.triggerSync("moveTo", this.position.x, target.y).
+                    onComplete(function(){
+                        console.log("complete");
+                        self.unlock();
+                    }
+                );
             }
             else {
                 console && console.log("failed to move to " + target.x + " " + target.y);
-                console && console.log(targetCell);
                 this.trigger("lurch", facing);
             }
         },
         
         _turnTo: function(facing) {
-            if (this.locked) {
+            var self = this;
+            if (this.lockCount > 0) {
                 if (this.queue.length < MAX_QUEUE_LEN) {
                     this.queue.push(_.bind(this._turnTo, this, facing));
                 }
@@ -62,7 +71,10 @@
             if (this.locked) return;
             this.facing.copy(facing);
             console && console.log("facing is now " + this.facing.x + " " + this.facing.y);
-            this.trigger("turnTo", this.facing);            
+            self.lock();
+            this.triggerSync("turnTo", this.facing).onComplete(function(){
+                self.unlock();
+            });
         },
     
         moveForward: function() {
@@ -90,12 +102,12 @@
         },
         
         lock: function () {
-            this.locked = true;
+            this.lockCount++;
         },
         
         unlock: function () {
-            this.locked = false;
-            while (this.queue.length && !this.locked) {
+            this.lockCount = Math.max(this.lockCount - 1, 0);
+            while (this.queue.length && this.lockCount === 0) {
                 this.queue.shift()();
             }
         }

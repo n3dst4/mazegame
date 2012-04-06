@@ -13,13 +13,12 @@
         MOVE_SPEED = 200,
         HEAD_TILT_DOWN = 0,//-Math.PI*(20/360),
         container = $('#container'),
-        renderer = new THREE.WebGLRenderer({antialias: true}),
-        //renderer = new THREE.CanvasRenderer(),
-        material = new THREE.MeshLambertMaterial({
-			color: 0xffffff,
-			map: THREE.ImageUtils.loadTexture('proto_blue.png', {}, function() {})
+        renderer = new THREE.WebGLRenderer({
+			antialias: true,
+			//autoClear: false
 		})
-        //material = new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: false}),
+        //renderer = new THREE.CanvasRenderer(),
+         //material = new THREE.MeshPhongMaterial({color: 0xffffff, wireframe: false}),
         //material = new THREE.MeshBasicMaterial({color: 0xcccccc}),
         ;
     renderer.setSize(WIDTH, HEIGHT);
@@ -63,7 +62,7 @@
 	controls.bind("turnLeft", player.turnLeft, player);
 	controls.bind("turnRight", player.turnRight, player);
 
-	var mapScene = new MAZE.MapScene(map, CUBE_SCALE, material);
+	var mapScene = new MAZE.MapScene(map, CUBE_SCALE);
 	var playerCamera = new MAZE.PlayerCamera({
 		player: player,
 		scale: CUBE_SCALE,
@@ -85,7 +84,6 @@
         renderer.render(mapScene.scene, playerCamera.camera);
         TWEEN.update();
     }
-    
 	// kickoff
     $(function(){
         container.append(renderer.domElement);
