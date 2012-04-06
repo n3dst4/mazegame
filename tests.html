@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>MAZE Game Test Suite</title>
+	<link rel="stylesheet" href="lib/qunit/gabe.css" type="text/css" media="screen">
+	
+	<script src="lib/qunit/qunit.js"></script>		
+	<!--<script src="tests/Shites.js"></script>		-->
+		
+		
+    <script src="lib/modernizr.custom.13328.js"></script>
+    <script>
+		
+        Modernizr.load([{
+            load: [
+                "lib/underscore-min.js",
+                "lib/Three.js",
+                "lib/jquery-1.7.2.js",
+                "lib/Tween.js",
+                "src/MAZE/EventBroker.js",
+                "src/MAZE/Controls.js",
+                "src/MAZE/cells/Cell.js",
+                "src/MAZE/Map.js",
+                "src/MAZE/MapScene.js",
+                "src/MAZE/StringMap.js",
+                "src/MAZE/Actor.js",
+                "src/MAZE/PlayerCamera.js",
+                "tests/EventBrokerTests.js"
+            ]
+        }]);
+    </script>
+        
+</head>
+<body>
+
+	<div id="qunit"></div>
+	<div id="qunit-fixture">test markup</div>
+</body>
+</html>
