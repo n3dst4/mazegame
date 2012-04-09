@@ -3,15 +3,18 @@
         cells = MAZE.cells = MAZE.cells || {};
         
     // Cell prototype
+    // TODO: this makes all cells be able to fire events. Maybe make only the
+    // relevant ones mixin EventBroker?
     cells.Cell = function (x, y) {
+        MAZE.EventBroker.apply(this, arguments);
         this.position = {x: x, y: y};
     }
-    cells.Cell.prototype = {
+    cells.Cell.prototype = _.extend({}, MAZE.EventBroker.prototype, {
         isBlocked: false,
         canAccept: function (actor) {
             return ! this.isBlocked;
         }
-    };
+    });
     
     
     // Generic empty cell
@@ -49,8 +52,8 @@
         this.isExitPoint = true;
     };
     cells.ExitCell.prototype = new cells.EmptyCell();
-    cells.ExitCell.prototype.canAccept = function (actor) {
-        return cells.Cell.prototype.canAccept.apply(this, arguments);
+    cells.ExitCell.prototype.accept = function (actor) {
+        if (actor.isPlayer) this.trigger("playerEntered");
     };
     
     

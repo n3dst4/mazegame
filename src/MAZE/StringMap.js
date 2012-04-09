@@ -51,11 +51,16 @@
             this.exitCell = exitCells[0];
         }
         
+        exitCells[0].bind("playerEntered", function() {
+            alert("Well done!");
+            self.trigger("win");
+        });
+        
         // we're good to go
         this.rows = rows;
     }
     
-    MAZE.StringMap.prototype = MAZE.Map.prototype;
+    MAZE.StringMap.prototype = new MAZE.Map();
     
     
 }(jQuery, this));

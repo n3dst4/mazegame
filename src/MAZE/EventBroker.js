@@ -46,8 +46,6 @@
     
     
     EventBroker.prototype = {
-    
-        
         /**
          * Bind callback to eventName. Whenever eventName is triggered, callback
          * will be called.
@@ -62,8 +60,6 @@
             this._registry[eventName].push(callback);
             return this;
         },
-        
-        
         
         /**
          * Bind callback to eventName, and also execute it if eventName has already
@@ -82,7 +78,6 @@
         },
         
         
-        
         /**
          * Bind callback to eventName. The next time eventName is triggered,
          * callback will be called. It will then be unbound.
@@ -90,7 +85,6 @@
         once: function (eventName, callback) {
             return this.bind(eventName, this._makeWrapper(eventName, callback));
         },
-    
         
         
         /**
@@ -100,7 +94,6 @@
         onceWhen: function (eventName, callback) {
             return this.when(eventName, this._makeWrapper(eventName, callback));
         },
-        
         
         
         /**
@@ -189,6 +182,8 @@
             return wrapper;    
         }
     };
+    
+
 }(jQuery, this));
 
 

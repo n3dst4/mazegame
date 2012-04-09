@@ -4,7 +4,8 @@
     MAZE.Controls = function (domElement) {
         var i, self = this;
         MAZE.EventBroker.call(this);
-        $(domElement).keydown(function ( event ) {
+        this.domElement = $(domElement);
+        this.callback = function ( event ) {
             switch( event.keyCode ) {
                 case 38: /*up*/
                 case 87: /*W*/ self.trigger("moveForward"); break;
@@ -19,11 +20,15 @@
                 case 81: /*Q*/ self.trigger("turnLeft"); break;
                 default: /*self.locked = false;*/
             }
-        });        
+        };
+        
+        this.domElement.bind("keydown", this.callback);
     }
     
     MAZE.Controls.prototype = {
-
+        destroy: function () {
+            this.domElement.unbind("keydown", this.callback);
+        }
     };
     
     _.extend(MAZE.Controls.prototype, MAZE.EventBroker.prototype);
