@@ -1,7 +1,7 @@
 (function($, global){
     var i, MAZE = global.MAZE = global.MAZE || {};
     
-    MAZE.Map = function (strings) {
+    MAZE.Map = function () {
         var i, self = this;
         this.rows = [];
         this.startCell = null;
