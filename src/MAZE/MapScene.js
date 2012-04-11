@@ -70,6 +70,7 @@
         mesh = new THREE.Mesh(
             mergedGeometry,
             new THREE.MeshFaceMaterial()
+            //new THREE.MeshNormalMaterial()
         );
         //mesh.position.x = 0;
         //mesh.position.y = 0;

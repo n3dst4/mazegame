@@ -3,7 +3,7 @@
 
 var broker;
 
-module("EventBroker", {setup: function(){ broker = new MAZE.EventBroker; }});
+module("MAZE.EventBroker", {setup: function(){ broker = new MAZE.EventBroker; }});
 
 test("MAZE.EventsBroker exists", function () {
     expect(1);
@@ -90,58 +90,76 @@ asyncTest("when(eventName, callback)", 2, function () {
 });
 
 
+asyncTest("triggerSync", 2, function() {
 
-
-asyncTest("once(eventName, callback)", 1, function () {
-    var testName = "test5",
-        called = false;
-        
-    function myCallback1 () {
-        if (called) {
-            ok(false, "callback1 called twice");
-        }
-        else {
-            called = true;
-            ok(true, "callback1 called once");
-        }
+    function callback (data, onComplete) {
+        ok(true, "callback got called");
+        onComplete();
     }
     
-    function myCallback2 () {
+    broker.bind("event", callback);
+    
+    var event = broker.triggerSync("event", "data");
+    event.onComplete(function(){
+        ok(true, "onComplete got called");
         start();
-    }
-
-    broker.once(testName, myCallback1);
-    broker.trigger(testName);
-    broker.bind(testName, myCallback2);
-    broker.trigger(testName);
+    });
+    
 });
 
 
 
-asyncTest("onceWhen(eventName, callback)", 1, function () {
-    var testName = "test6",
-        called = false;
-        
-    function myCallback1 () {
-        if (called) {
-            ok(false, "callback1 called twice");
-        }
-        else {
-            called = true;
-            ok(true, "callback1 called once");
-        }
-    }
-    
-    function myCallback2 () {
-        start();
-    }
 
-    broker.trigger(testName);
-    broker.onceWhen(testName, myCallback1);
-    broker.trigger(testName);
-    broker.bind(testName, myCallback2);
-    broker.trigger(testName);
-});
+//test("once(eventName, callback)", 1, function () {
+//    var testName = "test5",
+//        called = false;
+//        
+//    function myCallback1 () {
+//        if (called) {
+//            ok(false, "callback1 called twice");
+//        }
+//        else {
+//            called = true;
+//            ok(true, "callback1 called once");
+//        }
+//    }
+//    
+//    function myCallback2 () {
+//        start();
+//    }
+//
+//    broker.once(testName, myCallback1);
+//    broker.trigger(testName);
+//    //broker.bind(testName, myCallback2);
+//    //broker.trigger(testName);
+//});
+
+
+
+//asyncTest("onceWhen(eventName, callback)", 1, function () {
+//    var testName = "test6",
+//        called = false;
+//        
+//    function myCallback1 () {
+//        if (called) {
+//            ok(false, "callback1 called twice");
+//        }
+//        else {
+//            called = true;
+//            ok(true, "callback1 called once");
+//        }
+//    }
+//    
+//    function myCallback2 () {
+//        start();
+//    }
+//
+//    broker.trigger(testName);
+//    broker.onceWhen(testName, myCallback1);
+//    broker.trigger(testName);
+//    broker.bind(testName, myCallback2);
+//    broker.trigger(testName);
+//});
 
 
 

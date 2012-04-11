@@ -56,7 +56,8 @@
             }
             // arguments 1+ can be sent straight to _.bind
             var bindArgs = Array.prototype.slice.call(arguments, 1);
-            callback = _.bind.apply(_, bindArgs);
+            var boundCallback = _.bind.apply(_, bindArgs);
+            boundCallback.wrappee = callback.wrappee || callback;
             this._registry[eventName].push(callback);
             return this;
         },
@@ -82,18 +83,18 @@
          * Bind callback to eventName. The next time eventName is triggered,
          * callback will be called. It will then be unbound.
          */
-        once: function (eventName, callback) {
-            return this.bind(eventName, this._makeWrapper(eventName, callback));
-        },
+        //once: function (eventName, callback) {
+        //    return this.bind(eventName, this._makeWrapper(eventName, callback));
+        //},
         
         
         /**
          * Bind callback to eventName. The next time eventName is triggered,
          * callback will be called. It will then be unbound.
          */
-        onceWhen: function (eventName, callback) {
-            return this.when(eventName, this._makeWrapper(eventName, callback));
-        },
+        //onceWhen: function (eventName, callback) {
+        //    return this.when(eventName, this._makeWrapper(eventName, callback));
+        //},
         
         
         /**
@@ -172,15 +173,15 @@
         /*
          * Create a wrapper around a callback
          */
-        _makeWrapper: function (eventName, callback) {
-            var self = this,
-                wrapper = function(){
-                    self.unbind(eventName, wrapper);
-                    return callback.apply(this, arguments);
-                };
-            wrapper.wrappee = callback;
-            return wrapper;    
-        }
+        //_makeWrapper: function (eventName, callback) {
+        //    var self = this,
+        //        wrapper = function(){
+        //            self.unbind(eventName, wrapper);
+        //            return callback.apply(this, arguments);
+        //        };
+        //    wrapper.wrappee = callback;
+        //    return wrapper;    
+        //}
     };
     
 
