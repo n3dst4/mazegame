@@ -6,6 +6,8 @@
         
         var mesh, cube;
         
+        this.scale = scale;
+        
         var scene = this.scene = new THREE.Scene(),
             wallMaterial = new THREE.MeshPhongMaterial({
                 reflectivity: 0.1,

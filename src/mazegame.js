@@ -63,9 +63,6 @@
         
         mapScene = new MAZE.MapScene(map, CUBE_SCALE);
         playerCamera = new MAZE.PlayerCamera({
-            player: player,
-            scale: CUBE_SCALE,
-            map: map,
             mapScene: mapScene,
             angle: VIEW_ANGLE,
             moveSpeed: MOVE_SPEED

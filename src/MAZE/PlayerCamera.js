@@ -3,10 +3,9 @@
     var i, MAZE = global.MAZE = global.MAZE || {};
     
     MAZE.PlayerCamera = function (params) {
-        var player = this.player = params.player,
-            scale = this.scale = params.scale,
-            moveSpeed = this.moveSpeed = params.moveSpeed || 200,
+        var moveSpeed = this.moveSpeed = params.moveSpeed || 200,
             mapScene = params.mapScene,
+            scale = this.scale = mapScene.scale,
             angle = params.angle || 55,
             aspect = params.aspect || 4/3,
             near = params.near || 0.1,
@@ -48,7 +47,6 @@
         
         _tween: function (a, b,callback) {
             var self = this;
-            //this.player.lock();
             var tween = new TWEEN.Tween(a).to(b, this.moveSpeed).start();
             if (callback) tween.onComplete(callback);
         },
@@ -83,11 +81,12 @@
                 lurch = facing.clone().multiplyScalar(this.scale * 0.05),
                 target1 = new THREE.Vector2().copy(this.dolly.position).addSelf(lurch),
                 target2 = new THREE.Vector2().copy(this.dolly.position);
-            this.player.lock();                
+            if (this.lurchLock) return;
+            this.lurchLock = true;                
             var tween = new TWEEN.Tween(this.dolly.position).to(target1, this.moveSpeed/2).start();
             var tween2 = new TWEEN.Tween(this.dolly.position).to(target2, this.moveSpeed/2); 
             tween.chain(tween2);
-            tween2.onComplete(function(){ self.player.unlock(); });
+            tween2.onComplete(function(){ self.lurchLock = false; });
         }
 
     };
