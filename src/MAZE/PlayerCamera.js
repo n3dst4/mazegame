@@ -1,4 +1,5 @@
 (function($, global){
+    "use strict";
     var i, MAZE = global.MAZE = global.MAZE || {};
     
     MAZE.PlayerCamera = function (params) {

@@ -1,4 +1,5 @@
 (function($, global){
+    "use strict";
 
     var undef = "undefined";
     var i, MAZE = global.MAZE = global.MAZE || {};

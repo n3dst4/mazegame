@@ -1,6 +1,6 @@
 (function($, global){
+    "use strict";
     var i, MAZE = global.MAZE = global.MAZE || {};
-    
     
     MAZE.MapScene = function (map, scale, material) {
         
@@ -32,7 +32,7 @@
                              wallMaterial, wallMaterial, wallMaterial];
         var ceilingMaterials = [ ceilingMaterial, ceilingMaterial, ceilingMaterial,
                                ceilingMaterial, ceilingMaterial, ceilingMaterial];
-        mergedGeometry = new THREE.Geometry();
+        var mergedGeometry = new THREE.Geometry();
 
             
         for (y=0; y < map.rows.length; y++) {

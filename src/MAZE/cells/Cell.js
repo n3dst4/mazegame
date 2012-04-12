@@ -1,4 +1,6 @@
 (function($, global){
+    "use strict";
+    
     var i, MAZE = global.MAZE = global.MAZE || {},
         cells = MAZE.cells = MAZE.cells || {};
         

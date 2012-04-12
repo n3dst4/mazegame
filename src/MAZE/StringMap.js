@@ -1,6 +1,6 @@
 (function($, global){
+    "use strict";
     var i, MAZE = global.MAZE = global.MAZE || {};
-    
     
     MAZE.StringMap = function (strings) {
         var i, self = this;

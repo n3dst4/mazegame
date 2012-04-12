@@ -1,4 +1,5 @@
 (function($, global){
+    "use strict";
     var i,
         MAX_QUEUE_LEN = 1,
         MAZE = global.MAZE = global.MAZE || {};
