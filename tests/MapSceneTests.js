@@ -1,12 +1,27 @@
 (function(){
 
+var map, scene;
+
 module("MAZE.MapScene", {
-    setup: function(){},
-    tearDown: function(){}
+    setup: function(){
+        map = new MAZE.StringMap([
+            "#.#.#.#.#",
+            "#. .O. .#",
+            "#. . . .#",
+            "#. .A. .#",
+            "#.#.#.#.#",
+        ]);
+        //scene = new MAZE.MapScene(map);
+    },
+    tearDown: function(){
+    }
 });
 
-test("untested", function(){
-    ok(false, "This module isn't being tested yet")
+test("right number of cubes", function(){
+    sinon.spy(THREE, "CubeGeometry");
+    var scene = new MAZE.MapScene(map);
+    equal(THREE.CubeGeometry.callCount, 34);
+    THREE.CubeGeometry.restore();
 });
 
 
