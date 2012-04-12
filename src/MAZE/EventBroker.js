@@ -58,7 +58,7 @@
             var bindArgs = Array.prototype.slice.call(arguments, 1);
             var boundCallback = _.bind.apply(_, bindArgs);
             boundCallback.wrappee = callback.wrappee || callback;
-            this._registry[eventName].push(callback);
+            this._registry[eventName].push(boundCallback);
             return this;
         },
         

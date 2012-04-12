@@ -39,6 +39,9 @@ MockMap.prototype = _.extend({}, MAZE.Map.prototype);
 //TESTS
 test("getCellAt", function(){
     equal(map.getCellAt(0, 0).name, "a", "right cell returned");
+    equal(map.getCellAt(1, 0).name, "b", "right cell returned");
+    equal(map.getCellAt(0, 1).name, "c", "right cell returned");
+    equal(map.getCellAt(1, 1).name, "d", "right cell returned");
 });
 
 
