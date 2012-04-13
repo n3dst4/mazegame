@@ -55,6 +55,8 @@
         
         var player = new MAZE.Actor(map);
         
+        map.addPlayer(player);
+        
         controls = new MAZE.Controls(document);
         controls.bind("moveForward", player.moveForward, player);
         controls.bind("moveBackward", player.moveBackward, player);
