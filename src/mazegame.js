@@ -48,10 +48,12 @@
             /*                            0 1 2 3 4 5 6*/
         ]);
         
-        map.bind("win", createMap);
+        map.bind("win", function(){
+            alert("Well done!");
+            createMap()
+        });
         
         var player = new MAZE.Actor(map);
-        player.isPlayer = true;
         
         controls = new MAZE.Controls(document);
         controls.bind("moveForward", player.moveForward, player);

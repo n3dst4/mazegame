@@ -45,7 +45,7 @@
             mapScene.scene.add(this.dolly);
         },
         
-        _tween: function (a, b,callback) {
+        _tween: function (a, b, callback) {
             var self = this;
             var tween = new TWEEN.Tween(a).to(b, this.moveSpeed).start();
             if (callback) tween.onComplete(callback);

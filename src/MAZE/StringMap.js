@@ -10,6 +10,8 @@
         strings = $.merge([], strings);
         strings.reverse();
         
+        this.players = [];
+        
         // turn array of strings into array of arrays of Cell objects
         var rows = _.map(strings, function(row, rowIndex){
             row = _.filter(row.split(''), function(cell){ return cell !== "."; });
@@ -51,9 +53,13 @@
             this.exitCell = exitCells[0];
         }
         
-        exitCells[0].bind("playerEntered", function() {
-            alert("Well done!");
-            self.trigger("win");
+        exitCells[0].bind("entered", function(thing) {
+            var isPlayer = _.any(self.players, function(player){
+                return player === thing;
+            });
+            if (isPlayer) {
+                self.trigger("win");
+            }
         });
         
         // we're good to go
@@ -61,6 +67,29 @@
     }
     
     MAZE.StringMap.prototype = new MAZE.Map();
-    
+
+    MAZE.StringMap.prototype.addPlayer = function (player) {
+        this.players.push(player);
+    };
     
 }(jQuery, this));
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -22,13 +22,17 @@
     // Generic empty cell
     cells.EmptyCell = function () {
         cells.Cell.apply(this, arguments);
-        this.actors = [];
+        this.contents = [];
     };
     cells.EmptyCell.prototype = new cells.Cell();
     _.extend(cells.EmptyCell.prototype, {
         accept: function (actor) {
-            this.actors.push(actor);
+            this.contents.push(actor);
+        },
+        getContents: function () {
+            return this.contents;
         }
+        
     });
     
     
@@ -54,8 +58,8 @@
         this.isExitPoint = true;
     };
     cells.ExitCell.prototype = new cells.EmptyCell();
-    cells.ExitCell.prototype.accept = function (actor) {
-        if (actor.isPlayer) this.trigger("playerEntered");
+    cells.ExitCell.prototype.accept = function (thing) {
+        this.trigger("entered", thing);
     };
     
     

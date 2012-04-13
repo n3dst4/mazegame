@@ -56,7 +56,7 @@
                 );
             }
             else {
-                console && console.log("failed to move to " + target.x + " " + target.y);
+                //console && console.log("failed to move to " + target.x + " " + target.y);
                 this.trigger("lurch", facing);
             }
         },
@@ -71,7 +71,7 @@
             }
             if (this.locked) return;
             this.facing.copy(facing);
-            console && console.log("facing is now " + this.facing.x + " " + this.facing.y);
+            //console && console.log("facing is now " + this.facing.x + " " + this.facing.y);
             self.lock();
             this.triggerSync("turnTo", this.facing).onComplete(function(){
                 self.unlock();

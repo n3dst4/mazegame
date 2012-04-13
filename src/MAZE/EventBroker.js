@@ -17,12 +17,12 @@
             var self = this,
                 called = false;
             this.callCount++;
-            console.log("creating callback for " + this.eventName + ", callCount is now " + this.callCount);
+            //console.log("creating callback for " + this.eventName + ", callCount is now " + this.callCount);
             return function () {
                 if (called) return;
                 called = true;
                 self.callbackCount++;
-                console.log("fired callback for " + self.eventName + ", callbackCount is now " + self.callbackCount);
+                //console.log("fired callback for " + self.eventName + ", callbackCount is now " + self.callbackCount);
                 self.fireWhenReady();
             }
         },
