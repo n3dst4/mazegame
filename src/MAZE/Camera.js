@@ -24,11 +24,11 @@
             z: eyeLevel
         });
 
-        this.camera = new THREE.PerspectiveCamera(angle, aspect, near, far);
-        this.camera.position = new THREE.Vector3(0,0,scale/2);
-        this.camera.rotation = new THREE.Vector3(headTilt,0,0);
+        this.tCamera = new THREE.PerspectiveCamera(angle, aspect, near, far);
+        this.tCamera.position = new THREE.Vector3(0,0,scale/2);
+        this.tCamera.rotation = new THREE.Vector3(headTilt,0,0);
 
-        this.dolly.add(this.camera);
+        this.dolly.add(this.tCamera);
         
         pointLight.position = new THREE.Vector3(0,0,0);
         this.dolly.add(pointLight);
