@@ -2,7 +2,7 @@
     "use strict";
     var i, MAZE = global.MAZE = global.MAZE || {};
     
-    MAZE.PlayerCamera = function (params) {
+    MAZE.Camera = function (params) {
         var moveSpeed = this.moveSpeed = params.moveSpeed || 200,
             mapScene = params.mapScene,
             scale = this.scale = mapScene.scale,
@@ -38,7 +38,7 @@
     }
     
     
-    MAZE.PlayerCamera.prototype = {
+    MAZE.Camera.prototype = {
         enter: function (mapScene) {
             this.dolly.position.x = mapScene.map.startCell.position.x*this.scale + (this.scale/2);
             this.dolly.position.y = mapScene.map.startCell.position.y*this.scale + (this.scale/2);

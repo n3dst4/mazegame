@@ -3,7 +3,7 @@ var SCALE = 100;
 
 TWEEN.start();
     
-module("MAZE.PlayerCamera", {
+module("MAZE.Camera", {
     setup: function(){
         this.map = new MAZE.StringMap([
             "#.#.#.#.#",
@@ -15,25 +15,11 @@ module("MAZE.PlayerCamera", {
         
         this.scene = new MAZE.MapScene(this.map, SCALE);
         
-        this.playerCamera = new MAZE.PlayerCamera({
+        this.playerCamera = new MAZE.Camera({
             mapScene: this.scene,
             angle: 55,
             moveSpeed: 200
         });
-        
-        
-        
-        //function render() {
-        //    if (brakes) {
-        //        brakes = false;
-        //    }
-        //    else {
-        //        setTimeout(render, 0);
-        //        TWEEN.update();
-        //    }
-        //}
-        //render();
-        
     },
     tearDown: function(){}
 });
@@ -43,17 +29,6 @@ test("should start at right location", 2, function(){
     equal(this.playerCamera.dolly.position.x, SCALE * 2.5);
     equal(this.playerCamera.dolly.position.y, SCALE * 1.5);
 });
-
-
-//asyncTest("should move forward by 100 units when moved forward", 2, function(){
-//    var x = playerCamera.dolly.position.x;
-//    var y = playerCamera.dolly.position.y;
-//    playerCamera.moveTo(2, 2, function () {
-//        equal(playerCamera.dolly.position.x, x, "x position");
-//        equal(playerCamera.dolly.position.y, y + SCALE, "y position");
-//        start();
-//    });
-//});
 
 asyncTest("should move forward by 100 units when moved forward", 2, function(){
     var x = this.playerCamera.dolly.position.x;

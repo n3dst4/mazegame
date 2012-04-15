@@ -66,7 +66,7 @@
         controls.bind("turnRight", player.turnRight, player);
         
         mapScene = new MAZE.MapScene(map, CUBE_SCALE);
-        playerCamera = new MAZE.PlayerCamera({
+        playerCamera = new MAZE.Camera({
             mapScene: mapScene,
             angle: VIEW_ANGLE,
             moveSpeed: MOVE_SPEED
