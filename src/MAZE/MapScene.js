@@ -10,17 +10,14 @@
         
         var scene = this.scene = new THREE.Scene(),
             wallMaterial = new THREE.MeshPhongMaterial({
-                reflectivity: 0.1,
-                refractionRatio: 0.5,
                 color: 0xffffff,
-                vertexColors: true,
                 map: THREE.ImageUtils.loadTexture('images/proto_blue.png', {}, function() {})
             }),
-            floorMaterial = new THREE.MeshLambertMaterial({
+            floorMaterial = new THREE.MeshPhongMaterial({
                 color: 0xffffff,
                 map: THREE.ImageUtils.loadTexture('images/proto_floor.png', {}, function() {})
             }),
-            ceilingMaterial = new THREE.MeshLambertMaterial({
+            ceilingMaterial = new THREE.MeshPhongMaterial({
                 color: 0xffffff,
                 map: THREE.ImageUtils.loadTexture('images/proto_white.png', {}, function() {})
             }),
