@@ -3,3 +3,9 @@
 Limit movement rate in Player
 
 Player lock should increment/decrement
+
+
+sides 0 is RHS of cube
+      1 is LHS
+      2 is Back
+      3 is Front
