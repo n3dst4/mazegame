@@ -4,15 +4,15 @@
     
     var wallMaterial = new THREE.MeshPhongMaterial({
             color: 0xffffff,
-            map: THREE.ImageUtils.loadTexture('images/proto_blue.png', {}, function() {})
+            map: THREE.ImageUtils.loadTexture('images/metal_wall_10_r.jpg', {}, function() {})
         }),
         floorMaterial = new THREE.MeshPhongMaterial({
             color: 0xffffff,
-            map: THREE.ImageUtils.loadTexture('images/proto_floor.png', {}, function() {})
+            map: THREE.ImageUtils.loadTexture('images/metal_floor_01_r.jpg', {}, function() {})
         }),
         ceilingMaterial = new THREE.MeshPhongMaterial({
             color: 0xffffff,
-            map: THREE.ImageUtils.loadTexture('images/proto_white.png', {}, function() {})
+            map: THREE.ImageUtils.loadTexture('images/metal_base_03_r.jpg', {}, function() {})
         }),    
         floorMaterials = [ floorMaterial, floorMaterial, floorMaterial,
                              floorMaterial, floorMaterial, floorMaterial ],
