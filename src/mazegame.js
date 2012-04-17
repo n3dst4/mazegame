@@ -80,7 +80,7 @@
     // render loop
     function render() {
         requestAnimationFrame(render);
-        renderer.render(mapScene.scene, playerCamera.camera);
+        renderer.render(mapScene.scene, playerCamera.tCamera);
         TWEEN.update();
     }
     
