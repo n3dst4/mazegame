@@ -20,6 +20,7 @@
             this.blocks[y] = [];
             for (x=0; x < map.rows[y].length; x++) {
                 this.blocks[y][x] = new MAZE.Block(map.rows[y][x], scale);
+                
             }
         }
         
