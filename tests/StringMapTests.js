@@ -4,7 +4,6 @@ var map;
 
 module("MAZE.StringMap", {
     setup: function(){
-        console.log("setup");
         this.map = new MAZE.StringMap([
             "#######",
             "#A   O#",
@@ -29,7 +28,6 @@ test("can only have one start and exit", function(){
 });
 
 asyncTest("can add a player, and that player will trigger a win", function() {
-    console.log("one");
     var player = {};
     this.map.addPlayer(player);
     this.map.bind("win", function(){
@@ -40,7 +38,6 @@ asyncTest("can add a player, and that player will trigger a win", function() {
 });
 
 asyncTest("non-player objects will not trigger a win", function() {
-    console.log("two");
     var monster = {};
     this.map.bind("win", function(){
         ok(false, "Map should not have been won")
