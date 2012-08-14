@@ -16,11 +16,10 @@
         this.blocks = [];
         
         // create all the blocks
-        for (y=0; y < map.rows.length; y++) {
-            this.blocks[y] = [];
-            for (x=0; x < map.rows[y].length; x++) {
-                this.blocks[y][x] = new MAZE.Block(map.rows[y][x], scale);
-                
+        for (x=0; x < map.cols.length; x++) {
+            this.blocks[x] = [];
+            for (y=0; y < map.cols[x].length; y++) {
+                this.blocks[x][y] = new MAZE.Block(map.cols[x][y], scale);
             }
         }
         
@@ -28,20 +27,25 @@
         var changed = true;
         while (changed) {
             changed = false;
-            for (y=0; y < map.rows.length; y++) {
-                for (x=0; x < map.rows[y].length; x++) {
-                    changed = changed || this.blocks[y][x].improve();
+            for (x=0; x < map.cols.length; x++) {
+                for (y=0; y < map.cols[x].length; y++) {
+                    changed = changed || this.blocks[x][y].improve();
                 }
-            }            
+            }
         }
         
         // ask all the blocks to add themselves to "this" (they will call
         // addStaticMesh or addDynamicMesh)
-        for (y=0; y < map.rows.length; y++) {
-            for (x=0; x < map.rows[y].length; x++) {
+        for (y=0; y < map.cols.length; y++) {
+            for (x=0; x < map.cols[y].length; x++) {
                 this.blocks[y][x].addTo(this);
             }
         }            
+        for (x=0; x < map.cols.length; x++) {
+            for (y=0; y < map.cols[x].length; y++) {
+                this.blocks[x][y].addTo(this);
+            }
+        }
         
         // sort out the merged geometry
         mesh = new THREE.Mesh(

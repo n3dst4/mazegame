@@ -28,10 +28,13 @@ function MockCell (name) {
 
 function MockMap() {
     MAZE.Map.apply(this);
-    this.rows = [
+    var rows = [
         [new MockCell("a"), new MockCell("b")],
         [new MockCell("c"), new MockCell("d")]
     ];
+    this.cols = _.map(_.range(rows[0].length), function(i){
+        return _.map(rows, function(row){ return row[i]; });
+    });        
 }
 MockMap.prototype = _.extend({}, MAZE.Map.prototype);
 

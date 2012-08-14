@@ -50,7 +50,7 @@
         
         map.bind("win", function(){
             alert("Well done!");
-            createMap()
+            createMap();
         });
         
         var player = new MAZE.Actor(map);

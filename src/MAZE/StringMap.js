@@ -22,7 +22,7 @@
                         "WallCell";
                 return new MAZE.cells[type](cellIndex, rowIndex);
             });
-        })        
+        });
         
         // hunt out all the start and exit cells (should be 1 of each)
         var allCells = _.flatten(rows);
@@ -63,7 +63,9 @@
         });
         
         // we're good to go
-        this.rows = rows;
+        this.cols = _.map(_.range(rows[0].length), function(i){
+            return _.map(rows, function(row){ return row[i]; });
+        });
     }
     
     MAZE.StringMap.prototype = new MAZE.Map();

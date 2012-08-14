@@ -4,7 +4,7 @@
     
     MAZE.Map = function () {
         var i, self = this;
-        this.rows = [];
+        this.cols = [];
         this.startCell = null;
         this.exitCell = null;
         MAZE.EventBroker.apply(this, arguments);        
@@ -13,7 +13,7 @@
     MAZE.Map.prototype = _.extend({}, MAZE.EventBroker.prototype, {
         getCellAt: function(x, y) {
             try {
-                return this.rows[y][x]; //  grrr, row *then* column
+                return this.cols[x][y];
             }
             catch (e){
                 return null;
