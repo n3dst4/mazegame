@@ -7,6 +7,7 @@
         this.cols = [];
         this.startCell = null;
         this.exitCell = null;
+        this.players = [];        
         MAZE.EventBroker.apply(this, arguments);        
     }
     
@@ -18,7 +19,11 @@
             catch (e){
                 return null;
             }
-        }
-    });    
+        },
+        
+        addPlayer: function (player) {
+            this.players.push(player);
+        }        
+    });
     
 }(jQuery, this));
